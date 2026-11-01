@@ -13,5 +13,8 @@
     "astro": "^7.4.4"
   },
   "type": "module",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "yaml": "^2.9.1"
+  }
 }
