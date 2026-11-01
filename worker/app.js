@@ -96,7 +96,7 @@ function coverSvg(slug, category) {
   return `<svg viewBox="0 0 1200 576" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="576" class="d-panel"/>${lines}<circle class="d-soft" cx="650" cy="270" r="260"/>${dots}${ICONS[category] || ICONS.control}</svg>`;
 }
 const imgUrl = (slug) => `/img/${slug}.jpg`;
-const media = (p, cls) => p.img ? `<img src="${imgUrl(p.slug)}" alt="${esc(p.imgAlt || p.title)}" width="1024" height="1024" ${cls === 'hero' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">` : coverSvg(p.slug, p.category);
+const media = (p, cls) => p.img ? `<img src="${imgUrl(p.slug)}" alt="${esc(p.imgAlt || p.title)}" width="1600" height="896" ${cls === 'hero' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">` : coverSvg(p.slug, p.category);
 
 // ---------- dados ----------
 async function allPosts(env) {
@@ -119,9 +119,9 @@ function page({ title, description = DESC, path, body, noindex = false, schema =
   const nav = Object.entries(CATS).slice(0, 4).map(([k, c]) => `<a href="/tema/${k}/">${c[0].split(' y ')[0]}</a>`).join('');
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(full)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${url}">
-${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}<meta name="theme-color" content="#f5f8f7"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+${noindex ? '<meta name="robots" content="noindex, nofollow">' : '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">'}<meta name="theme-color" content="#f5f8f7"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="${NAME}" href="/rss.xml">
-<meta property="og:type" content="${ogType}"><meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:site_name" content="${NAME}"><meta property="og:locale" content="es_MX">${image ? `<meta property="og:image" content="${SITE}${image}"><meta property="og:image:width" content="1024"><meta property="og:image:height" content="1024"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE}${image}">` : '<meta name="twitter:card" content="summary">'}
+<meta property="og:type" content="${ogType}"><meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:site_name" content="${NAME}"><meta property="og:locale" content="es_MX">${image ? `<meta property="og:image" content="${SITE}${image}"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="896"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE}${image}">` : '<meta name="twitter:card" content="summary">'}
 <script>try{if(localStorage.getItem('vx-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
