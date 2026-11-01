@@ -1,0 +1,18 @@
+---
+import Page from '../layouts/Page.astro';
+import { CONTACT_EMAIL } from '../consts';
+---
+<Page title="Política editorial" description="Cómo investigamos, escribimos y actualizamos los artículos de VEXOR Blog sobre salud y bienestar masculino.">
+  <h2>Nuestros principios</h2>
+  <ul>
+    <li><strong>Fuentes reconocidas.</strong> Basamos cada artículo en organizaciones médicas, guías clínicas y estudios publicados en revistas revisadas por pares. Todas las fuentes se listan al final del texto.</li>
+    <li><strong>Sin promesas de cura.</strong> No prometemos resultados garantizados ni “curas en días”. Explicamos lo que dice la evidencia, incluidas sus limitaciones.</li>
+    <li><strong>Educación, no diagnóstico.</strong> Nuestro contenido no reemplaza la evaluación de un médico. Indicamos cuándo conviene buscar ayuda profesional.</li>
+    <li><strong>Transparencia comercial.</strong> VEXOR Blog pertenece a VEXOR Health. Cuando mencionamos nuestro programa, lo identificamos claramente. El sitio también puede mostrar anuncios de terceros, identificados como “Publicidad”.</li>
+    <li><strong>Actualización.</strong> Revisamos los artículos cuando surge evidencia nueva e indicamos la fecha de actualización.</li>
+  </ul>
+  <h2>Uso de herramientas</h2>
+  <p>Usamos herramientas de inteligencia artificial para apoyar la investigación y la redacción. Cada texto sigue estas reglas editoriales, se basa en las fuentes citadas y pasa por revisión del equipo antes de publicarse.</p>
+  <h2>Correcciones</h2>
+  <p>Si encuentras un error, escríbenos a <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Corregimos lo antes posible.</p>
+</Page>

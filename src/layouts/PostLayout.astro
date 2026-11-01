@@ -1,0 +1,139 @@
+---
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Cta from '../components/Cta.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PostCard from '../components/PostCard.astro';
+import { AUTHOR, CATEGORIES, SITE_NAME } from '../consts';
+import { formatDate, readingTime, getPublishedPosts, type Post } from '../utils';
+
+interface Props { post: Post; preview?: boolean }
+const { post, preview = false } = Astro.props;
+const { Content, headings } = await render(post);
+const d = post.data;
+const cat = CATEGORIES[d.category];
+const url = new URL(`/${post.id}/`, Astro.site).toString();
+const toc = headings.filter((h) => h.depth === 2);
+
+const related = (await getPublishedPosts())
+  .filter((p) => p.id !== post.id && p.data.category === d.category)
+  .slice(0, 3);
+
+const schema: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: d.title,
+    description: d.description,
+    datePublished: d.pubDate.toISOString(),
+    dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
+    inLanguage: 'es',
+    mainEntityOfPage: url,
+    author: { '@type': 'Organization', name: AUTHOR.name, url: new URL('/sobre/', Astro.site).toString() },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: Astro.site?.toString() },
+    citation: d.sources.map((s) => s.url),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: Astro.site?.toString() },
+      { '@type': 'ListItem', position: 2, name: cat.name, item: new URL(`/tema/${d.category}/`, Astro.site).toString() },
+      { '@type': 'ListItem', position: 3, name: d.title, item: url },
+    ],
+  },
+];
+if (d.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
+---
+<Base title={d.title} description={d.description} ogType="article" noindex={preview} schema={preview ? [] : schema}>
+  {preview && <div slot="top" class="draft-bar">PRÉVIA — rascunho ainda não publicado (o Google não vê esta página)</div>}
+  <div class="progress" id="progress"></div>
+  <article class="read">
+    <header class="post-head">
+      <nav class="breadcrumbs"><a href="/">Inicio</a> / <a href={`/tema/${d.category}/`}>{cat.name}</a></nav>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.description}</p>
+      <div class="meta">
+        <span>Por <a href="/sobre/">{AUTHOR.name}</a></span>
+        <span>·</span>
+        <time datetime={d.pubDate.toISOString()}>{formatDate(d.pubDate)}</time>
+        {d.updatedDate && <><span>·</span><span>Actualizado {formatDate(d.updatedDate)}</span></>}
+        <span>·</span>
+        <span>{readingTime(post.body)} min</span>
+      </div>
+    </header>
+
+    <p class="disclaimer-top">Contenido educativo. No sustituye la consulta médica. Si el problema es persistente, causa dolor o malestar importante, habla con un médico o urólogo.</p>
+
+    {toc.length > 2 && (
+      <details class="toc" open>
+        <summary>En este artículo</summary>
+        <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+      </details>
+    )}
+
+    <div class="prose" id="prose">
+      <Content />
+    </div>
+
+    <!-- movidos para o meio do texto pelo script abaixo -->
+    <div id="mid-blocks">
+      <Cta variant="mid" slug={post.id} category={d.category} />
+      <AdSlot />
+    </div>
+
+    {d.faq.length > 0 && (
+      <section class="faq prose">
+        <h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>
+        {d.faq.map((f) => (
+          <details><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </section>
+    )}
+
+    <Cta variant="end" slug={post.id} category={d.category} />
+
+    <section class="sources">
+      <h2>Fuentes</h2>
+      <ol>{d.sources.map((s) => <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.name}</a></li>)}</ol>
+    </section>
+
+    <div class="author-box">
+      <div class="avatar">V</div>
+      <div>
+        <strong>{AUTHOR.name}</strong>
+        <p>{AUTHOR.bio} <a href="/politica-editorial/">Cómo hacemos nuestro contenido</a>.</p>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="wrap">
+      <h2>Sigue leyendo</h2>
+      <div class="grid">{related.map((p) => <PostCard post={p} />)}</div>
+    </section>
+  )}
+
+  <script>
+    // barra de progresso de leitura
+    const bar = document.getElementById('progress');
+    const onScroll = () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      if (bar) bar.style.width = `${Math.min(100, pct)}%`;
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+
+    // coloca o CTA e o anúncio antes do 3º subtítulo do texto
+    const prose = document.getElementById('prose');
+    const mid = document.getElementById('mid-blocks');
+    const h2s = prose ? prose.querySelectorAll('h2') : [];
+    if (prose && mid && h2s.length >= 3) prose.insertBefore(mid, h2s[2]);
+  </script>
+</Base>

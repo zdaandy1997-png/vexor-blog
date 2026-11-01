@@ -1,0 +1,9 @@
+---
+import Page from '../layouts/Page.astro';
+import { CONTACT_EMAIL } from '../consts';
+---
+<Page title="Contacto" description="Escríbenos para dudas, sugerencias de temas o correcciones sobre los artículos de VEXOR Blog.">
+  <p>¿Tienes una duda, una sugerencia de tema o encontraste un error? Escríbenos:</p>
+  <p><a class="btn" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+  <p>No respondemos consultas médicas individuales. Para eso, consulta a un profesional de la salud.</p>
+</Page>

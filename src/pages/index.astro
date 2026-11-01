@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE_NAME, SITE_DESCRIPTION, CATEGORIES, CTA_URL } from '../consts';
+import { getPublishedPosts } from '../utils';
+
+const posts = await getPublishedPosts();
+const [first, ...rest] = posts;
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: Astro.site?.toString(),
+  inLanguage: 'es',
+  description: SITE_DESCRIPTION,
+}];
+---
+<Base title={SITE_NAME} schema={schema}>
+  <section class="wrap hero">
+    <span class="eyebrow">● Bienestar masculino · basado en evidencia</span>
+    <h1>Entiende tu cuerpo. <span>Toma el control.</span></h1>
+    <p>Guías claras sobre control, ansiedad de desempeño, erección y hábitos. Sin juicios, sin vergüenza y sin promesas milagrosas.</p>
+    <a class="btn" href={`${CTA_URL}?utm_source=blog&utm_medium=hero&utm_campaign=organico`}>Haz el test discreto de 2 min →</a>
+  </section>
+
+  <section class="wrap">
+    <div class="chips">
+      {Object.entries(CATEGORIES).map(([key, c]) => <a class="chip" href={`/tema/${key}/`}>{c.name}</a>)}
+    </div>
+    <div class="grid">
+      {first && <PostCard post={first} featured />}
+      {rest.map((p) => <PostCard post={p} />)}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getDraftPosts, formatDate } from '../../utils';
+const drafts = (await getDraftPosts()).sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
+---
+<Base title="Rascunhos" noindex>
+  <section class="wrap page">
+    <h1>Fila de rascunhos</h1>
+    <p>Posts esperando aprovação. Esta página não aparece no Google.</p>
+    {drafts.length === 0 && <p>Nenhum rascunho no momento.</p>}
+    <ul>
+      {drafts.map((p) => (
+        <li><a href={`/previa/${p.id}/`}>{p.data.title}</a> — {formatDate(p.data.pubDate)}</li>
+      ))}
+    </ul>
+  </section>
+</Base>

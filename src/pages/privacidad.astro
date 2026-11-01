@@ -1,0 +1,17 @@
+---
+import Page from '../layouts/Page.astro';
+import { CONTACT_EMAIL } from '../consts';
+---
+<Page title="Política de privacidad" description="Cómo VEXOR Blog trata los datos de navegación, cookies y publicidad de terceros como Google AdSense.">
+  <p><em>Última actualización: 31 de octubre de 2026.</em></p>
+  <h2>Qué datos recopilamos</h2>
+  <p>VEXOR Blog no exige registro. Podemos recopilar datos técnicos de navegación (como páginas visitadas, tipo de dispositivo y país aproximado) mediante herramientas de analítica, de forma agregada.</p>
+  <h2>Cookies y publicidad</h2>
+  <p>Este sitio puede mostrar anuncios de <strong>Google AdSense</strong>. Proveedores externos, incluido Google, utilizan cookies para mostrar anuncios basados en visitas anteriores del usuario a este u otros sitios web.</p>
+  <p>El uso de cookies publicitarias permite a Google y a sus socios mostrar anuncios basados en las visitas a este sitio y/o a otros sitios de Internet. Puedes desactivar la publicidad personalizada en la <a href="https://adssettings.google.com" rel="nofollow noopener" target="_blank">Configuración de anuncios de Google</a>, o desactivar las cookies de terceros en <a href="https://www.aboutads.info" rel="nofollow noopener" target="_blank">www.aboutads.info</a>.</p>
+  <p>Más información sobre cómo Google usa los datos: <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">policies.google.com/technologies/partner-sites</a>.</p>
+  <h2>Enlaces a VEXOR Health</h2>
+  <p>Algunos enlaces llevan a vexorhealth.com e incluyen parámetros de campaña (UTM) para saber qué artículos son útiles. Allí se aplica la política de privacidad de VEXOR Health.</p>
+  <h2>Tus derechos</h2>
+  <p>Puedes solicitar información o la eliminación de cualquier dato que tengamos sobre ti escribiendo a <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
+</Page>

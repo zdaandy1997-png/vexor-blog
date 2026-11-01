@@ -1,0 +1,14 @@
+---
+import Page from '../layouts/Page.astro';
+import { AUTHOR, CTA_URL } from '../consts';
+---
+<Page title="Quiénes somos" description="Conoce al equipo detrás de VEXOR Blog y por qué hablamos de bienestar masculino sin tabúes ni promesas milagrosas.">
+  <p>VEXOR nació de una idea simple: muchos hombres viven con dudas sobre su intimidad —el control, la ansiedad de desempeño, la erección— y sienten vergüenza de preguntar. Terminan buscando respuestas en anuncios exagerados o en foros sin ningún respaldo.</p>
+  <p>Este blog existe para ofrecer lo contrario: <strong>explicaciones claras, sin juicios y basadas en fuentes médicas y científicas reconocidas</strong>.</p>
+  <h2>Quién escribe</h2>
+  <p>{AUTHOR.bio}</p>
+  <p>Cada artículo cita sus fuentes al final y se revisa cuando aparece información nueva. Puedes leer cómo trabajamos en nuestra <a href="/politica-editorial/">política editorial</a>.</p>
+  <h2>Qué es VEXOR Health</h2>
+  <p>VEXOR Health es una plataforma digital educativa de bienestar masculino, pensada para el celular. Su programa de 28 días combina contenidos cortos, respiración guiada, ejercicios y hábitos diarios. No es un medicamento ni un tratamiento médico, y no reemplaza la atención profesional.</p>
+  <p><a class="btn" href={`${CTA_URL}?utm_source=blog&utm_medium=sobre`}>Conocer el programa →</a></p>
+</Page>

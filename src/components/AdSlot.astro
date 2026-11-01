@@ -1,0 +1,11 @@
+---
+// Bloco de anúncio do AdSense. Só aparece quando ADSENSE_CLIENT estiver preenchido em src/consts.ts
+import { ADSENSE_CLIENT } from '../consts';
+---
+{ADSENSE_CLIENT && (
+  <div class="ad-slot">
+    <div class="ad-label">Publicidad</div>
+    <ins class="adsbygoogle" style="display:block" data-ad-client={ADSENSE_CLIENT} data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script is:inline>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+)}

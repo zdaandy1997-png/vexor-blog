@@ -1,0 +1,13 @@
+---
+// Prévia de rascunhos: blog.vexorhealth.com/previa/<slug>/
+// Não aparece na home, no sitemap nem no Google (noindex).
+import PostLayout from '../../layouts/PostLayout.astro';
+import { getDraftPosts } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = await getDraftPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+---
+<PostLayout post={post} preview />

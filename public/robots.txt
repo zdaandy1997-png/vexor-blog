@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /previa/
+
+Sitemap: https://blog.vexorhealth.com/sitemap-index.xml

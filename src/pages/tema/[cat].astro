@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { CATEGORIES, type CategoryKey } from '../../consts';
+import { getPublishedPosts } from '../../utils';
+
+export function getStaticPaths() {
+  return Object.keys(CATEGORIES).map((cat) => ({ params: { cat } }));
+}
+const cat = Astro.params.cat as CategoryKey;
+const info = CATEGORIES[cat];
+const posts = (await getPublishedPosts()).filter((p) => p.data.category === cat);
+---
+<Base title={info.name} description={info.description} noindex={posts.length === 0}>
+  <section class="wrap hero">
+    <span class="eyebrow">● Tema</span>
+    <h1>{info.name}</h1>
+    <p>{info.description}</p>
+  </section>
+  <section class="wrap">
+    {posts.length === 0 ? <p>Pronto publicaremos guías sobre este tema.</p> : (
+      <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+    )}
+  </section>
+</Base>

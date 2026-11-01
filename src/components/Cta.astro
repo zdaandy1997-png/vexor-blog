@@ -1,0 +1,23 @@
+---
+import { CTA_URL } from '../consts';
+interface Props { variant?: 'mid' | 'end'; slug?: string; category?: string }
+const { variant = 'end', slug = '', category = '' } = Astro.props;
+
+const copy = {
+  control: { h: '¿Quieres un plan, no solo información?', p: 'El programa VEXOR te guía 28 días con ejercicios cortos de control, respiración y hábitos. Empieza con un test discreto de 2 minutos.' },
+  ansiedad: { h: 'Entrena la calma, no solo la entiendas', p: 'VEXOR combina respiración guiada, atención y prácticas diarias para bajar la presión en la intimidad. Haz el test y recibe tu ruta.' },
+  ereccion: { h: 'Cuida tu respuesta con hábitos que suman', p: 'Un recorrido de 28 días con acciones simples de sueño, movimiento, respiración y suelo pélvico. Descubre por dónde empezar.' },
+  habitos: { h: 'Convierte hábitos en resultados diarios', p: 'VEXOR organiza sueño, energía y bienestar íntimo en un plan de 28 días, desde tu celular y con total discreción.' },
+  pareja: { h: 'Menos presión, más conexión', p: 'El programa VEXOR te ayuda a entender tu cuerpo y bajar la ansiedad paso a paso. Empieza con un test discreto.' },
+} as Record<string, { h: string; p: string }>;
+const c = copy[category] ?? copy.control;
+const href = `${CTA_URL}?utm_source=blog&utm_medium=cta_${variant}&utm_campaign=${encodeURIComponent(slug)}`;
+---
+<aside class="cta reveal" aria-label="Programa VEXOR">
+  <div class="scan"></div>
+  <span class="eyebrow">● Programa VEXOR</span>
+  <h3>{c.h}</h3>
+  <p>{c.p}</p>
+  <a class="btn" href={href}>Hacer el test gratis →</a>
+  <p class="cta-fine">Educativo y discreto. No es un tratamiento médico.</p>
+</aside>

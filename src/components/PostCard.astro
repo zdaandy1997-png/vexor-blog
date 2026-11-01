@@ -1,0 +1,17 @@
+---
+import { CATEGORIES } from '../consts';
+import { formatDate, readingTime, type Post } from '../utils';
+interface Props { post: Post; featured?: boolean }
+const { post, featured = false } = Astro.props;
+const cat = CATEGORIES[post.data.category];
+---
+<a class:list={['card', 'reveal', { 'card-featured': featured }]} href={`/${post.id}/`}>
+  <span class="tag">{cat.name}</span>
+  {featured ? <h2>{post.data.title}</h2> : <h3>{post.data.title}</h3>}
+  <p>{post.data.description}</p>
+  <div class="meta">
+    <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+    <span>·</span>
+    <span>{readingTime(post.body)} min de lectura</span>
+  </div>
+</a>

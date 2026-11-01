@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+import { SITE_NAME, SITE_DESCRIPTION, CTA_URL, ADSENSE_CLIENT, CATEGORIES } from '../consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  schema?: Record<string, unknown>[];
+}
+const { title, description = SITE_DESCRIPTION, noindex = false, ogType = 'website', schema = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#06090a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    {ADSENSE_CLIENT && !noindex && (
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`} crossorigin="anonymous"></script>
+    )}
+
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <slot name="top" />
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href="/"><span class="logo-dot"></span>VEXOR <small>Blog</small></a>
+        <nav class="nav" aria-label="Temas">
+          {Object.entries(CATEGORIES).slice(0, 4).map(([key, c]) => (
+            <a href={`/tema/${key}/`}>{c.name.split(' y ')[0]}</a>
+          ))}
+        </nav>
+        <a class="btn btn-sm" href={`${CTA_URL}?utm_source=blog&utm_medium=header&utm_campaign=organico`}>Haz el test</a>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <a class="logo" href="/"><span class="logo-dot"></span>VEXOR <small>Blog</small></a>
+            <p>Ciencia simple para el bienestar masculino.</p>
+          </div>
+          <nav aria-label="Legal">
+            <a href="/sobre/">Quiénes somos</a>
+            <a href="/politica-editorial/">Política editorial</a>
+            <a href="/aviso-medico/">Aviso médico</a>
+            <a href="/privacidad/">Privacidad</a>
+            <a href="/contacto/">Contacto</a>
+          </nav>
+        </div>
+        <p class="legal">
+          El contenido de este sitio es educativo y no sustituye el diagnóstico ni el tratamiento de un profesional de la salud.
+          Si tienes síntomas persistentes, dolor o dudas sobre medicamentos, consulta a un médico. © {year} VEXOR Health.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // revela elementos ao rolar
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      // brilho que segue o dedo/mouse nos cards
+      document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+        card.addEventListener('pointermove', (ev) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+          card.style.setProperty('--my', `${ev.clientY - r.top}px`);
+        });
+      });
+    </script>
+  </body>
+</html>
