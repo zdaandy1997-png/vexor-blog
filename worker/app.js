@@ -95,8 +95,8 @@ function coverSvg(slug, category) {
   const lines = Array.from({ length: 12 }, (_, k) => `<path class="d-line" d="M${k * 100} 0 V576 M0 ${k * 48} H1200"/>`).join('');
   return `<svg viewBox="0 0 1200 576" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="1200" height="576" class="d-panel"/>${lines}<circle class="d-soft" cx="650" cy="270" r="260"/>${dots}${ICONS[category] || ICONS.control}</svg>`;
 }
-const imgUrl = (slug) => `/img/${slug}.jpg`;
-const media = (p, cls) => p.img ? `<img src="${imgUrl(p.slug)}" alt="${esc(p.imgAlt || p.title)}" width="1600" height="896" ${cls === 'hero' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">` : coverSvg(p.slug, p.category);
+const imgUrl = (slug, v) => `/img/${slug}.jpg${v ? '?v=' + v : ''}`;
+const media = (p, cls) => p.img ? `<img src="${imgUrl(p.slug, p.imgV)}" alt="${esc(p.imgAlt || p.title)}" width="1600" height="896" ${cls === 'hero' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">` : coverSvg(p.slug, p.category);
 
 // ---------- dados ----------
 async function allPosts(env) {
@@ -157,7 +157,7 @@ async function postPage(env, post, slug, preview) {
   const related = (await allPosts(env)).filter((p) => isLive(p) && p.slug !== slug && p.category === post.category).slice(0, 3);
   const schema = [
     { '@context': 'https://schema.org', '@type': 'Article', headline: post.title, description: post.description, datePublished: post.pubDate, dateModified: post.updatedDate || post.pubDate, inLanguage: 'es', mainEntityOfPage: url,
-      author: { '@type': 'Organization', name: AUTHOR.name, url: SITE + '/sobre/' }, publisher: { '@type': 'Organization', name: NAME, url: SITE + '/' }, citation: post.sources.map((s) => s.url), image: post.img ? SITE + imgUrl(slug) : undefined },
+      author: { '@type': 'Organization', name: AUTHOR.name, url: SITE + '/sobre/' }, publisher: { '@type': 'Organization', name: NAME, url: SITE + '/' }, citation: post.sources.map((s) => s.url), image: post.img ? SITE + imgUrl(slug, post.imgV) : undefined },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE + '/' },
       { '@type': 'ListItem', position: 2, name: cat[0], item: `${SITE}/tema/${post.category}/` },
@@ -176,7 +176,7 @@ ${ctaBox('end', slug, post.category)}
 <section class="sources"><h2>Fuentes</h2><ol>${post.sources.map((s) => `<li><a href="${esc(s.url)}" rel="nofollow noopener" target="_blank">${esc(s.name)}</a></li>`).join('')}</ol></section>
 <div class="author-box"><div class="avatar">V</div><div><strong>${AUTHOR.name}</strong><p>${AUTHOR.bio} <a href="/politica-editorial/">Cómo hacemos nuestro contenido</a>.</p></div></div></article>
 ${related.length ? `<section class="wrap"><h2>Sigue leyendo</h2><div class="grid">${related.map((p) => card(p)).join('')}</div></section>` : ''}`;
-  return page({ title: post.title, description: post.description, path: `/${slug}/`, body, noindex: preview, schema: preview ? [] : schema, ogType: 'article', image: post.img ? imgUrl(slug) : '',
+  return page({ title: post.title, description: post.description, path: `/${slug}/`, body, noindex: preview, schema: preview ? [] : schema, ogType: 'article', image: post.img ? imgUrl(slug, post.imgV) : '',
     top: preview ? '<div class="draft-bar">PRÉVIA — rascunho ainda não publicado (o Google não vê esta página)</div>' : '' });
 }
 
