@@ -109,7 +109,7 @@ async function allPosts(env) {
   } while (cursor);
   return list.sort((a, b) => (b.pubDate > a.pubDate ? 1 : -1));
 }
-const isLive = (p) => !p.draft && p.pubDate <= today();
+const isLive = (p) => p.approved === true && !p.draft && p.pubDate <= today();
 async function getPost(env, slug) { return env.POSTS.get('post:' + slug, 'json'); }
 
 // ---------- layout ----------
