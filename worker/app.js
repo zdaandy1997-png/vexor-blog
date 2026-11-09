@@ -224,7 +224,7 @@ export default {
       const items = list.map((x) => {
         const img = `${SITE}/pin/${x.slug}.jpg?v=${x.pinV}`;
         const link = `${SITE}/${x.slug}/?utm_source=pinterest&utm_medium=social&utm_campaign=pin`;
-        return `<item><title>${esc(x.title)}</title><link>${esc(link)}</link><guid isPermaLink="false">${x.slug}-pin-${x.pinV}</guid><description>${esc(`<img src="${img}" alt="${x.title}"/><p>${x.description}</p>`)}</description><pubDate>${new Date((x.pinDate || x.pubDate) + 'T12:00:00Z').toUTCString()}</pubDate><enclosure url="${esc(img)}" type="image/jpeg" length="0"/><media:content url="${esc(img)}" medium="image" type="image/jpeg" width="1000" height="1500"/></item>`;
+        return `<item><title>${esc(x.title)}</title><link>${esc(link)}</link><guid isPermaLink="false">${x.slug}-pin-${x.pinV}</guid><description>${esc(x.description)}</description><pubDate>${new Date((x.pinDate || x.pubDate) + 'T12:00:00Z').toUTCString()}</pubDate><enclosure url="${esc(img)}" type="image/jpeg" length="0"/><media:content url="${esc(img)}" medium="image" type="image/jpeg" width="1000" height="1500"/></item>`;
       }).join('');
       return new Response(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>${NAME}</title><link>${SITE}/</link><description>${esc(DESC)}</description><language>es</language>${items}</channel></rss>`, { headers: { 'content-type': 'application/rss+xml; charset=utf-8', 'cache-control': 'public, max-age=1800' } });
     }
