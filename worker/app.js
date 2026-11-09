@@ -242,8 +242,8 @@ export default {
 
     if (p === '/sitemap.xml') {
       const urls = ['/', ...Object.keys(STATIC).map((k) => `/${k}/`), ...Object.keys(CATS).filter((c) => live.some((x) => x.category === c)).map((c) => `/tema/${c}/`)]
-        .map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(live.map((x) => `<url><loc>${SITE}/${x.slug}/</loc><lastmod>${x.updatedDate || x.pubDate}</lastmod></url>`));
-      return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.join('')}</urlset>`, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
+        .map((x) => `<url><loc>${SITE}${x}</loc></url>`).concat(live.map((x) => `<url><loc>${SITE}/${x.slug}/</loc><lastmod>${x.updatedDate || x.pubDate}</lastmod>${x.img ? `<image:image><image:loc>${SITE}${imgUrl(x.slug, x.imgV)}</image:loc></image:image>` : ''}</url>`));
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${urls.join('')}</urlset>`, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
     }
     if (p === '/rss.xml') {
       const items = live.slice(0, 30).map((x) => `<item><title>${esc(x.title)}</title><link>${SITE}/${x.slug}/</link><guid>${SITE}/${x.slug}/</guid><description>${esc(x.description)}</description><pubDate>${new Date(x.pubDate + 'T12:00:00Z').toUTCString()}</pubDate></item>`).join('');
