@@ -215,6 +215,19 @@ export default {
       const b = await env.POSTS.get('img:' + im[1], 'arrayBuffer');
       return b ? new Response(b, { headers: { 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=2592000' } }) : new Response('not found', { status: 404 });
     }
+    if ((im = p.match(/^\/pin\/([a-z0-9-]+)\.jpg$/))) {
+      const b = await env.POSTS.get('pin:' + im[1], 'arrayBuffer');
+      return b ? new Response(b, { headers: { 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=2592000' } }) : new Response('not found', { status: 404 });
+    }
+    if (p === '/pins.xml') {
+      const list = (await allPosts(env)).filter((x) => isLive(x) && x.pinV).slice(0, 50);
+      const items = list.map((x) => {
+        const img = `${SITE}/pin/${x.slug}.jpg?v=${x.pinV}`;
+        const link = `${SITE}/${x.slug}/?utm_source=pinterest&utm_medium=social&utm_campaign=pin`;
+        return `<item><title>${esc(x.title)}</title><link>${esc(link)}</link><guid isPermaLink="false">${x.slug}-pin-${x.pinV}</guid><description>${esc(`<img src="${img}" alt="${x.title}"/><p>${x.description}</p>`)}</description><pubDate>${new Date((x.pinDate || x.pubDate) + 'T12:00:00Z').toUTCString()}</pubDate><enclosure url="${esc(img)}" type="image/jpeg" length="0"/><media:content url="${esc(img)}" medium="image" type="image/jpeg" width="1000" height="1500"/></item>`;
+      }).join('');
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>${NAME}</title><link>${SITE}/</link><description>${esc(DESC)}</description><language>es</language>${items}</channel></rss>`, { headers: { 'content-type': 'application/rss+xml; charset=utf-8', 'cache-control': 'public, max-age=1800' } });
+    }
     if (p === '/robots.txt') return new Response(`User-agent: *\nAllow: /\nDisallow: /previa/\n\nSitemap: ${SITE}/sitemap.xml\n`, { headers: { 'content-type': 'text/plain' } });
     if (p === '/ads.txt') { const ads = await env.POSTS.get('asset:ads.txt'); return ads ? new Response(ads, { headers: { 'content-type': 'text/plain' } }) : notFound(); }
     if (!p.endsWith('/') && !p.includes('.')) return Response.redirect(u.origin + p + '/' + u.search, 301);
